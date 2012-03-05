@@ -1,11 +1,11 @@
-name    'huit-gitolite'
+name    'huit/gitolite'
 version '0.0.1'
 source 'UNKNOWN'
 author 'huit'
-license 'UNKNOWN'
-summary 'UNKNOWN'
-description 'UNKNOWN'
-project_page 'UNKNOWN'
+license 'GPL'
+summary 'Host Git repositories with gitolite'
+description 'Install gitolite and create a git user for hosting repositories'
+project_page 'http://github.com/hakamadare/puppet-gitolite'
 
 ## Add dependencies, if any:
-# dependency 'username/name', '>= 1.2.0'
+dependency 'puppetlabs/vcsrepo', '>= 0.0.4'
