@@ -112,7 +112,7 @@ class gitolite (
     $gitolite::srcdir:
       provider => "git",
       ensure   => "present",
-      source   => "git://github.com/sitaramc/gitolite.git",
+      source   => "http://github.com/sitaramc/gitolite.git",
       revision => $gitolite::version,
       require  => [
         Package[$gitolite::gitpkg,$gitolite::perlpkg],
