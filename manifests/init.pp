@@ -10,6 +10,7 @@
 #     *NOTE* repositories are hosted here
 #   version: release tag of desired Gitolite version (default "v2.3")
 #     can accept version strings, git hashes, or other branches/tags
+#   packages: set this to false if you want to define the necessary packages elsewhere
 #
 # Actions:
 #
@@ -37,7 +38,8 @@ class gitolite (
   $user = "gitolite",
   $password,
   $homedir = "/var/gitolite",
-  $version = "v2.3"
+  $version = "v2.3",
+  $packages = true
 ) {
 
   $bashpkg = $operatingsystem ? {
@@ -63,19 +65,21 @@ class gitolite (
 
   $srcdir = "/usr/src/gitolite"
 
-  Package {
-    ensure => "present"
-  }
+  if $packages {
+    Package {
+      ensure => "present"
+    }
 
-  package {
-    $gitolite::bashpkg:
-      ;
-    $gitolite::perlpkg:
-      requires => Package[$gitolite::bashpkg];
-    $gitolite::sshpkg:
-      requires => Package[$gitolite::bashpkg];
-    $gitolite::gitpkg:
-      requires => Package[$gitolite::perlpkg,$gitolite::sshpkg];
+    package {
+      $gitolite::bashpkg:
+        ;
+      $gitolite::gitpkg:
+        require => Package[$gitolite::sshpkg];
+      $gitolite::perlpkg:
+        require => Package[$gitolite::bashpkg];
+      $gitolite::sshpkg:
+        require => Package[$gitolite::bashpkg];
+    }
   }
 
   user {
@@ -103,7 +107,7 @@ class gitolite (
       source   => "git://github.com/sitaramc/gitolite.git",
       revision => $gitolite::version,
       require  => [
-        Package[$gitolite::gitpkg],
+        Package[$gitolite::gitpkg,$gitolite::perlpkg],
         User[$gitolite::user],
         File[$gitolite::homedir]
       ],

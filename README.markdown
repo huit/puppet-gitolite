@@ -16,6 +16,9 @@ This module automatically installs [gitolite](http://sitaramc.github.com/gitolit
 * `version`  
   release tag of desired Gitolite version (default "v2.3")  
   can accept version strings, git hashes, or other branches/tags  
+* `packages`  
+  boolean value that determines whether this module will define the necessary package resources  
+  set this to `false` if you want to define them elsewhere in your manifests
 
 ## Actions:
 
