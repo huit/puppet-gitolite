@@ -82,14 +82,21 @@ class gitolite (
     }
   }
 
+  group {
+    $gitolite::user:
+      ensure => "present";
+  }
+
+
   user {
     $gitolite::user:
-      ensure     => "present",
-      comment    => "Gitolite Hosting",
-      gid        => "gitolite",
-      home       => $gitolite::homedir,
-      password   => $gitolite::password,
-      system     => true;
+      require  => Group[$gitolite::user],
+      ensure   => "present",
+      comment  => "Gitolite Hosting",
+      gid      => "gitolite",
+      home     => $gitolite::homedir,
+      password => $gitolite::password,
+      system   => true;
   }
 
   file {
