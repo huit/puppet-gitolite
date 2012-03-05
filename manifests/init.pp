@@ -125,7 +125,7 @@ class gitolite (
   exec {
     "gl-system-install":
       require     => Vcsrepo[$gitolite::srcdir],
-      command     => "./src/gl-system-install /usr/bin ${gitolite::homedir}/conf ${gitolite::homedir}/hooks",
+      command     => "${gitolite::srcdir}/src/gl-system-install /usr/bin ${gitolite::homedir}/conf ${gitolite::homedir}/hooks",
       cwd         => $gitolite::srcdir,
       user        => "root",
       group       => "root",
