@@ -7,9 +7,9 @@
     "tests/init.pp": "378f64329fbc9ca2ea5147fa0b306b43",
     "README.markdown": "240a7ee40ab4fff891677b9f3a1eaeac",
     "spec/spec.opts": "a600ded995d948e393fbe2320ba8e51c",
-    "metadata.json": "b279fe7866ebfb501c4ecc21fcb3c7fe",
+    "metadata.json": "9732e70297d9d92a6177f8736fa2a42c",
     "Modulefile": "5d81081cc2caf58d8d502d95eb46cfc2",
-    "manifests/init.pp": "cb6e3907f88a1ed98acbd1c58aeb64fd"
+    "manifests/init.pp": "f1fc07d0a0605bfc51067544d9a23c1e"
   },
   "description": "Install gitolite and create a git user for hosting repositories",
   "license": "GPL",

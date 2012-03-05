@@ -82,14 +82,21 @@ class gitolite (
     }
   }
 
+  group {
+    $gitolite::user:
+      ensure => "present";
+  }
+
+
   user {
     $gitolite::user:
-      ensure     => "present",
-      comment    => "Gitolite Hosting",
-      gid        => "gitolite",
-      home       => $gitolite::homedir,
-      password   => $gitolite::password,
-      system     => true;
+      require  => Group[$gitolite::user],
+      ensure   => "present",
+      comment  => "Gitolite Hosting",
+      gid      => "gitolite",
+      home     => $gitolite::homedir,
+      password => $gitolite::password,
+      system   => true;
   }
 
   file {
@@ -103,8 +110,9 @@ class gitolite (
 
   vcsrepo {
     $gitolite::srcdir:
+      provider => "git",
       ensure   => "present",
-      source   => "git://github.com/sitaramc/gitolite.git",
+      source   => "http://github.com/sitaramc/gitolite.git",
       revision => $gitolite::version,
       require  => [
         Package[$gitolite::gitpkg,$gitolite::perlpkg],
@@ -117,7 +125,7 @@ class gitolite (
   exec {
     "gl-system-install":
       require     => Vcsrepo[$gitolite::srcdir],
-      command     => "./src/gl-system-install /usr/bin ${gitolite::homedir}/conf ${gitolite::homedir}/hooks",
+      command     => "${gitolite::srcdir}/src/gl-system-install /usr/bin ${gitolite::homedir}/conf ${gitolite::homedir}/hooks",
       cwd         => $gitolite::srcdir,
       user        => "root",
       group       => "root",
