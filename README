@@ -1,6 +1,6 @@
 # gitolite
 
-This module automatically installs [gitolite](http://sitaramc.github.com/gitolite) and performs initial configuration.
+This module automatically installs [gitolite](http://sitaramc.github.com/gitolite) and performs initial configuration.  At present, it supports Red Hat-like and Debian-like platforms.
 
 **NOTE**: you must generate the SSH public key for the management user yourself (either with your own Puppet manifest, or manually) and install it before gitolite will work properly.  See the [documentation](http://sitaramc.github.com/gitolite/root.html).
 
