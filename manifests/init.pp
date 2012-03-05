@@ -110,6 +110,7 @@ class gitolite (
 
   vcsrepo {
     $gitolite::srcdir:
+      provider => "git",
       ensure   => "present",
       source   => "git://github.com/sitaramc/gitolite.git",
       revision => $gitolite::version,
