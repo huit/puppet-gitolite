@@ -4,12 +4,12 @@
   ],
   "checksums": {
     "spec/spec_helper.rb": "ca19ec4f451ebc7fdb035b52eae6e909",
-    "README": "6b1b8cc404bef69811680b2807c7f731",
     "tests/init.pp": "378f64329fbc9ca2ea5147fa0b306b43",
+    "README.markdown": "240a7ee40ab4fff891677b9f3a1eaeac",
     "spec/spec.opts": "a600ded995d948e393fbe2320ba8e51c",
-    "metadata.json": "d34d0b70aba36510fbc2df4e667479ef",
+    "metadata.json": "b279fe7866ebfb501c4ecc21fcb3c7fe",
     "Modulefile": "5d81081cc2caf58d8d502d95eb46cfc2",
-    "manifests/init.pp": "ecc1ace9594568de7b2c6886f62255f6"
+    "manifests/init.pp": "cb6e3907f88a1ed98acbd1c58aeb64fd"
   },
   "description": "Install gitolite and create a git user for hosting repositories",
   "license": "GPL",
