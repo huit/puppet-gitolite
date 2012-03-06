@@ -130,7 +130,7 @@ class gitolite (
       user        => "root",
       group       => "root",
       logoutput   => "on_failure",
-      creates     => "${gitolite::homedir}/conf",
+      subscribe   => $gitolite::srcdir,
       refreshonly => true;
   }
 }
