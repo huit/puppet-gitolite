@@ -129,7 +129,7 @@ class gitolite (
       user        => "root",
       group       => "root",
       logoutput   => "on_failure",
-      subscribe   => $gitolite::srcdir,
+      subscribe   => Vcsrepo[$gitolite::srcdir],
       refreshonly => true;
   }
 }
