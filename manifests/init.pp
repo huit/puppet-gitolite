@@ -43,24 +43,24 @@ class gitolite (
 ) {
 
   $bashpkg = $operatingsystem ? {
-    /(redhat|centos|fedora)/ => "bash",
-    /(debian|ubuntu)/        => "bash",
-    default                  => "bash"
+    /(?i:redhat|centos|fedora)/ => "bash",
+    /(?i:debian|ubuntu)/        => "bash",
+    default                     => "bash"
   }
   $gitpkg = $operatingsystem ? {
-    /(redhat|centos|fedora)/ => "git",
-    /(debian|ubuntu)/        => "git-core",
-    default                  => "git"
+    /(?i:redhat|centos|fedora)/ => "git",
+    /(?i:debian|ubuntu)/        => "git-core",
+    default                     => "git"
   }
   $perlpkg = $operatingsystem ? {
-    /(redhat|centos|fedora)/ => "perl",
-    /(debian|ubuntu)/        => "perl",
-    default                  => "perl"
+    /(?i:redhat|centos|fedora)/ => "perl",
+    /(?i:debian|ubuntu)/        => "perl",
+    default                     => "perl"
   }
   $sshpkg = $operatingsystem ? {
-    /(redhat|centos|fedora)/ => "openssh-clients",
-    /(debian|ubuntu)/        => "openssh-client",
-    default                  => "ssh-client"
+    /(?i:redhat|centos|fedora)/ => "openssh-clients",
+    /(?i:debian|ubuntu)/        => "openssh-client",
+    default                     => "ssh-client"
   }
 
   $srcdir = "/usr/src/gitolite"
@@ -118,8 +118,7 @@ class gitolite (
         Package[$gitolite::gitpkg,$gitolite::perlpkg],
         User[$gitolite::user],
         File[$gitolite::homedir]
-      ],
-      notify => Exec["gl-system-install"];
+      ];
   }
 
   exec {
