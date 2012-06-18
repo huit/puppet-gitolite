@@ -11,6 +11,10 @@
 #   version: release tag of desired Gitolite version (default "v2.3")
 #     can accept version strings, git hashes, or other branches/tags
 #   packages: set this to false if you want to define the necessary packages elsewhere
+#   nonrootinstallmethod: allows installing gitolite in non-root mode (default false)
+#     Different gitolite installation modes are described at
+#     http://sitaramc.github.com/gitolite/g2/install.html#install_installing_and_upgrading_gitolite_
+#     *NOTE* when using non-root install method set homedir to /home/...
 #
 # Actions:
 #
@@ -39,7 +43,8 @@ class gitolite (
   $password,
   $homedir = "/var/gitolite",
   $version = "v2.3",
-  $packages = true
+  $packages = true,
+  $nonrootinstallmethod = false
 ) {
 
   $bashpkg = $operatingsystem ? {
@@ -63,7 +68,10 @@ class gitolite (
     default                     => "ssh-client"
   }
 
-  $srcdir = "/usr/src/gitolite"
+  $srcdir = $gitolite::nonrootinstallmethod ? {
+    true  => "${gitolite::homedir}/gitolite",
+    default => "/usr/src/gitolite"
+  }
 
   if $packages {
     Package {
@@ -114,6 +122,8 @@ class gitolite (
       ensure   => "present",
       source   => "http://github.com/sitaramc/gitolite.git",
       revision => $gitolite::version,
+      owner    => $gitolite::nonrootinstallmethod ? { true  => $gitolite::user, default => "root" },
+      group    => $gitolite::nonrootinstallmethod ? { true  => $gitolite::user, default => "root" },
       require  => [
         Package[$gitolite::gitpkg,$gitolite::perlpkg],
         User[$gitolite::user],
@@ -124,12 +134,16 @@ class gitolite (
   exec {
     "gl-system-install":
       require     => Vcsrepo[$gitolite::srcdir],
-      command     => "${gitolite::srcdir}/src/gl-system-install /usr/bin ${gitolite::homedir}/conf ${gitolite::homedir}/hooks",
+      command     => $gitolite::nonrootinstallmethod ? {
+        true => "${gitolite::srcdir}/src/gl-system-install ${gitolite::homedir}/bin ${gitolite::homedir}/share/conf ${gitolite::homedir}/share/hooks",
+        default => "${gitolite::srcdir}/src/gl-system-install /usr/bin ${gitolite::homedir}/conf ${gitolite::homedir}/hooks",
+      },
       cwd         => $gitolite::srcdir,
-      user        => "root",
-      group       => "root",
+      user        => $gitolite::nonrootinstallmethod ? { true => $gitolite::user, default => "root" },
+      group       => $gitolite::nonrootinstallmethod ? { true => $gitolite::user, default => "root" },
       logoutput   => "on_failure",
       subscribe   => Vcsrepo[$gitolite::srcdir],
+      path        => ["${gitolite::homedir}/bin", "/usr/local/sbin", "/usr/local/bin", "/usr/sbin", "/usr/bin", "/sbin", "/bin"],
       refreshonly => true;
   }
 }
