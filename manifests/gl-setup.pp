@@ -4,7 +4,7 @@
 #
 # Parameters:
 #
-#   username: name of gitolite admin user
+#   user: name of gitolite admin user
 #   userkeysource: gitolite admin user public key source
 #   userkeycontent: gitolite admin user public key content
 #   refreshonly:
@@ -25,44 +25,46 @@
 #   }
 #   class {
 #     "gl-setup":
-#       username => 'admin',
+#       user    => 'admin',
+#       homedir => '/home/admin',
 #       userkeycontent = 'ssh-rsa X76287hjashd873629o...',
 #   }
 #
 # [Remember: No empty lines between comments and class definition]
 class gitolite::gl-setup (
-  $username,
+  $user,
+  $homedir,
   $userkeysource = undef,
   $userkeycontent = undef,
-  $refreshonly = true,
+  $refreshonly = true
 ) {
-  Class['gitolite'] -> Class['gl-setup']
+  Class["gitolite"] -> Class["gitolite::gl-setup"]
 
   file {
-    "${gitolite::homedir}/${gl-setup::username}.pub":
+    "${gitolite::homedir}/${gl-setup::user}.pub":
       ensure  => "file",
-      owner   => $gitolite::user,
-      group   => $gitolite::user,
-      source  => $gl-setup::userkeysource,
-      content => $gl-setup::userkeycontent,
-      mode    => 640,
+      owner   => $gitolite::gl-setup::user,
+      group   => $gitolite::gl-setup::user,
+      source  => $gitolite::gl-setup::userkeysource,
+      content => $gitolite::gl-setup::userkeycontent,
+      mode    => 640;
   }
 
   exec {
     "gl-setup":
-      require     => File["${gitolite::homedir}/${gl-setup::username}.pub"],
-      subscribe   => File["${gitolite::homedir}/${gl-setup::username}.pub"],
-      command     => "gl-setup -q -q ${gl-setup::username}.pub",
+      require     => File["${gitolite::gl-setup::homedir}/${gitolite::gl-setup::user}.pub"],
+      subscribe   => File["${gitolite::gl-setup::homedir}/${gitolite::gl-setup::user}.pub"],
+      command     => "gl-setup -q -q ${gl-setup::user}.pub",
       environment => [
-        "HOME=${gitolite::homedir}",
-        "USER=${gitolite::user}",
+        "HOME=${gitolite::gl-setup::homedir}",
+        "USER=${gitolite::gl-setup::user}",
       ],
-      cwd         => $gitolite::homedir,
-      user        => $gitolite::user,
-      group       => $gitolite::user,
+      cwd         => $gitolite::gl-setup::homedir,
+      user        => $gitolite::gl-setup::user,
+      group       => $gitolite::gl-setup::user,
       logoutput   => "on_failure",
-      path        => ["${gitolite::homedir}/bin", "/usr/local/sbin", "/usr/local/bin", "/usr/sbin", "/usr/bin", "/sbin", "/bin"],
-      refreshonly => $gl-setup::refreshonly,
+      path        => ["${gitolite::gl-setup::homedir}/bin", "/usr/local/sbin", "/usr/local/bin", "/usr/sbin", "/usr/bin", "/sbin", "/bin"],
+      refreshonly => $gitolite::gl-setup::refreshonly;
   }
 }
 #

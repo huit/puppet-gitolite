@@ -1,5 +1,5 @@
 name    'huit/gitolite'
-version '0.0.1'
+version '0.0.2'
 source 'UNKNOWN'
 author 'huit'
 license 'GPL'

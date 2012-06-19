@@ -8,7 +8,7 @@
 #   password: HASHED (not plain-text) password of gitolite management user
 #   homedir: home directory of gitolite management user
 #     *NOTE* repositories are hosted here
-#   version: release tag of desired Gitolite version (default "v2.3")
+#   version: release tag of desired Gitolite version (default "v3.03")
 #     can accept version strings, git hashes, or other branches/tags
 #   packages: set this to false if you want to define the necessary packages elsewhere
 #   nonrootinstallmethod: allows installing gitolite in non-root mode (default false)
@@ -42,7 +42,7 @@ class gitolite (
   $user = "gitolite",
   $password,
   $homedir = "/var/gitolite",
-  $version = "v2.3",
+  $version = "v3.03",
   $packages = true,
   $nonrootinstallmethod = false
 ) {
