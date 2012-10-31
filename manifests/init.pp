@@ -39,8 +39,8 @@
 #
 # [Remember: No empty lines between comments and class definition]
 class gitolite (
+  $password = 'undef',
   $user = "gitolite",
-  $password,
   $homedir = "/var/gitolite",
   $version = "v3.03",
   $packages = true,
@@ -90,30 +90,32 @@ class gitolite (
     }
   }
 
-  group {
-    $gitolite::user:
-      ensure => "present";
-  }
+  if $gitolite::password != 'undef'{
+    group {
+      $gitolite::user:
+        ensure => "present";
+    }
 
 
-  user {
-    $gitolite::user:
-      require  => Group[$gitolite::user],
-      ensure   => "present",
-      comment  => "Gitolite Hosting",
-      gid      => "gitolite",
-      home     => $gitolite::homedir,
-      password => $gitolite::password,
-      system   => true;
-  }
+    user {
+      $gitolite::user:
+        require  => Group[$gitolite::user],
+        ensure   => "present",
+        comment  => "Gitolite Hosting",
+        gid      => "gitolite",
+        home     => $gitolite::homedir,
+        password => $gitolite::password,
+        system   => true;
+    }
 
-  file {
-    $gitolite::homedir:
-      require => User[$gitolite::user],
-      ensure  => "directory",
-      owner   => $gitolite::user,
-      group   => $gitolite::user,
-      mode    => 750;
+    file {
+      $gitolite::homedir:
+        require => User[$gitolite::user],
+        ensure  => "directory",
+        owner   => $gitolite::user,
+        group   => $gitolite::user,
+        mode    => 750;
+    }
   }
 
   vcsrepo {
