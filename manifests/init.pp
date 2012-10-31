@@ -15,13 +15,15 @@
 #     Different gitolite installation modes are described at
 #     http://sitaramc.github.com/gitolite/g2/install.html#install_installing_and_upgrading_gitolite_
 #     *NOTE* when using non-root install method set homedir to /home/...
+#   keycontent: the public key that should have access to gitolite-admin when first configured
 #
 # Actions:
 #
-#   Installs packages to satisfy requirements
+#   Installs packages to satisfy requirements (optional)
 #   Creates source directory (/usr/src/gitolite) and checks out Gitolite repo
-#   Creates gitolite management user (local system user)
-#   Runs gl-system-install command
+#   Creates gitolite management user (local system user, optional)
+#   Runs gitolite/install
+#   Runs gitolite <public key>
 #
 # Requires:
 #
@@ -39,8 +41,9 @@
 #
 # [Remember: No empty lines between comments and class definition]
 class gitolite (
+  $keycontent,
+  $password = 'undef',
   $user = "gitolite",
-  $password,
   $homedir = "/var/gitolite",
   $version = "v3.03",
   $packages = true,
@@ -75,7 +78,8 @@ class gitolite (
 
   if $packages {
     Package {
-      ensure => "present"
+      ensure => "present",
+      before => Vcsrepo[$gitolite::srcdir],
     }
 
     package {
@@ -90,30 +94,32 @@ class gitolite (
     }
   }
 
-  group {
-    $gitolite::user:
-      ensure => "present";
-  }
+  if $gitolite::password != 'undef'{
+    group {
+      $gitolite::user:
+        ensure => "present";
+    }
 
 
-  user {
-    $gitolite::user:
-      require  => Group[$gitolite::user],
-      ensure   => "present",
-      comment  => "Gitolite Hosting",
-      gid      => "gitolite",
-      home     => $gitolite::homedir,
-      password => $gitolite::password,
-      system   => true;
-  }
+    user {
+      $gitolite::user:
+        require  => Group[$gitolite::user],
+        ensure   => "present",
+        comment  => "Gitolite Hosting",
+        gid      => "gitolite",
+        home     => $gitolite::homedir,
+        password => $gitolite::password,
+        system   => true;
+    }
 
-  file {
-    $gitolite::homedir:
-      require => User[$gitolite::user],
-      ensure  => "directory",
-      owner   => $gitolite::user,
-      group   => $gitolite::user,
-      mode    => 750;
+    file {
+      $gitolite::homedir:
+        require => User[$gitolite::user],
+        ensure  => "directory",
+        owner   => $gitolite::user,
+        group   => $gitolite::user,
+        mode    => 750;
+    }
   }
 
   vcsrepo {
@@ -124,28 +130,54 @@ class gitolite (
       revision => $gitolite::version,
       owner    => $gitolite::nonrootinstallmethod ? { true  => $gitolite::user, default => "root" },
       group    => $gitolite::nonrootinstallmethod ? { true  => $gitolite::user, default => "root" },
-      require  => [
-        Package[$gitolite::gitpkg,$gitolite::perlpkg],
-        User[$gitolite::user],
-        File[$gitolite::homedir]
-      ];
+  }
+
+  file { "${gitolite::homedir}/${gitolite::user}.pub":
+    ensure  => file,
+    owner   => $gitolite::user,
+    group   => $gitolite::user,
+    content => $gitolite::keycontent,
+    mode    => '0640',
+    require => User[$gitolite::user],
   }
 
   exec {
-    "gl-system-install":
+    "gitolite/install":
       require     => Vcsrepo[$gitolite::srcdir],
       command     => $gitolite::nonrootinstallmethod ? {
-        true => "${gitolite::srcdir}/src/gl-system-install ${gitolite::homedir}/bin ${gitolite::homedir}/share/conf ${gitolite::homedir}/share/hooks",
-        default => "${gitolite::srcdir}/src/gl-system-install /usr/bin ${gitolite::homedir}/conf ${gitolite::homedir}/hooks",
+        true => "${gitolite::srcdir}/install ${gitolite::homedir}/bin",
+        default => "${gitolite::srcdir}/install -ln /usr/local/bin",
       },
       cwd         => $gitolite::srcdir,
       user        => $gitolite::nonrootinstallmethod ? { true => $gitolite::user, default => "root" },
       group       => $gitolite::nonrootinstallmethod ? { true => $gitolite::user, default => "root" },
       logoutput   => "on_failure",
       subscribe   => Vcsrepo[$gitolite::srcdir],
-      path        => ["${gitolite::homedir}/bin", "/usr/local/sbin", "/usr/local/bin", "/usr/sbin", "/usr/bin", "/sbin", "/bin"],
+      path        => ["/usr/local/sbin", "/usr/local/bin", "/usr/sbin", "/usr/bin", "/sbin", "/bin"],
       refreshonly => true;
   }
+
+  exec { 'gitolite_setup':
+    require     => [
+      File["${gitolite::homedir}/${gitolite::user}.pub"],
+      Vcsrepo[$gitolite::srcdir],
+      Exec['gitolite/install']
+    ],
+    environment => [
+      "HOME=${gitolite::homedir}",
+      "USER=${gitolite::user}",
+    ],
+    subscribe   => File["${gitolite::homedir}/${gitolite::user}.pub"],
+    command     => "gitolite setup -pk ${gitolite::user}.pub",
+    cwd         => $gitolite::homedir,
+    user        => $gitolite::user,
+    group       => $gitolite::user,
+    logoutput   => 'on_failure',
+    path        => ["${gitolite::homedir}/bin", '/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin'],
+    refreshonly => true,
+  }
+
+
 }
 #
 # Copyright (C) 2012 Steve Huff <steve_huff@harvard.edu>
