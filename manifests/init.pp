@@ -36,7 +36,7 @@
 #
 #   class {
 #     "gitolite":
-#       password => '$1$oqINGwwF$yTik.GEYoKJtEHJBzt/.01';
+#       ;
 #   }
 #
 # [Remember: No empty lines between comments and class definition]
@@ -45,7 +45,7 @@ class gitolite (
   $password = 'undef',
   $user = "gitolite",
   $homedir = "/var/gitolite",
-  $version = "v3.03",
+  $version = "v3.1",
   $packages = true,
   $nonrootinstallmethod = false
 ) {
