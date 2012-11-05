@@ -14,7 +14,7 @@ This module automatically installs [gitolite](http://sitaramc.github.com/gitolit
   home directory of gitolite management user  
   **NOTE** repositories are hosted here  
 * `version`  
-  release tag of desired Gitolite version (default "v2.3")  
+  release tag of desired Gitolite version (default "v3.1")  
   can accept version strings, git hashes, or other branches/tags  
 * `packages`  
   boolean value that determines whether this module will define the necessary package resources  
@@ -24,8 +24,8 @@ This module automatically installs [gitolite](http://sitaramc.github.com/gitolit
 
 * Installs packages to satisfy requirements
 * Creates source directory (`/usr/src/gitolite`) and checks out Gitolite repo
-* Creates gitolite management user (local system user)
-* Runs `gl-system-install` command
+* Creates gitolite management user (local system user) if necessary
+* Runs `gl-system-install` command if necessary
 
 ## Requires:
 
@@ -38,5 +38,5 @@ This module automatically installs [gitolite](http://sitaramc.github.com/gitolit
 
     class {
       "gitolite":
-        password => '$1$oqINGwwF$yTik.GEYoKJtEHJBzt/.01';
+        ;
     }
