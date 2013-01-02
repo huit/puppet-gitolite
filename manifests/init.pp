@@ -8,6 +8,7 @@
 #   password: HASHED (not plain-text) password of gitolite management user
 #   homedir: home directory of gitolite management user
 #     *NOTE* repositories are hosted here
+#   source: repository url for gitolite (default "http://github.com/sitaramc/gitolite.git")
 #   version: release tag of desired Gitolite version (default "v3.03")
 #     can accept version strings, git hashes, or other branches/tags
 #   packages: set this to false if you want to define the necessary packages elsewhere
@@ -45,6 +46,7 @@ class gitolite (
   $password = 'undef',
   $user = "gitolite",
   $homedir = "/var/gitolite",
+  $source = "http://github.com/sitaramc/gitolite.git",
   $version = "v3.1",
   $packages = true,
   $nonrootinstallmethod = false
@@ -126,7 +128,7 @@ class gitolite (
     $gitolite::srcdir:
       provider => "git",
       ensure   => "present",
-      source   => "http://github.com/sitaramc/gitolite.git",
+      source   => $gitolite::source,
       revision => $gitolite::version,
       owner    => $gitolite::nonrootinstallmethod ? { true  => $gitolite::user, default => "root" },
       group    => $gitolite::nonrootinstallmethod ? { true  => $gitolite::user, default => "root" },
