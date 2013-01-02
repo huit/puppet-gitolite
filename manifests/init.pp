@@ -46,6 +46,7 @@ class gitolite (
   $password = 'undef',
   $user = "gitolite",
   $homedir = "/var/gitolite",
+  $source = "http://github.com/sitaramc/gitolite.git",
   $version = "v3.1",
   $packages = true,
   $nonrootinstallmethod = false
@@ -127,7 +128,7 @@ class gitolite (
     $gitolite::srcdir:
       provider => "git",
       ensure   => "present",
-      source   => "http://github.com/sitaramc/gitolite.git",
+      source   => $gitolite::source,
       revision => $gitolite::version,
       owner    => $gitolite::nonrootinstallmethod ? { true  => $gitolite::user, default => "root" },
       group    => $gitolite::nonrootinstallmethod ? { true  => $gitolite::user, default => "root" },
