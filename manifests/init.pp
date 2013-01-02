@@ -8,6 +8,7 @@
 #   password: HASHED (not plain-text) password of gitolite management user
 #   homedir: home directory of gitolite management user
 #     *NOTE* repositories are hosted here
+#   source: repository url for gitolite (default "http://github.com/sitaramc/gitolite.git")
 #   version: release tag of desired Gitolite version (default "v3.03")
 #     can accept version strings, git hashes, or other branches/tags
 #   packages: set this to false if you want to define the necessary packages elsewhere
