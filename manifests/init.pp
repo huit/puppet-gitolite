@@ -108,7 +108,7 @@ class gitolite (
         require  => Group[$gitolite::user],
         ensure   => "present",
         comment  => "Gitolite Hosting",
-        gid      => "gitolite",
+        gid      => $gitolite::user,
         home     => $gitolite::homedir,
         password => $gitolite::password,
         system   => true;
