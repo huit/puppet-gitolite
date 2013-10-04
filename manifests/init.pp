@@ -17,6 +17,14 @@
 #     http://sitaramc.github.com/gitolite/g2/install.html#install_installing_and_upgrading_gitolite_
 #     *NOTE* when using non-root install method set homedir to /home/...
 #   keycontent: the public key that should have access to gitolite-admin when first configured
+#   rcfile: configure .gitolite.rc file in gitolite mgmt user homedir
+#   umask: set the UMASK variable for gitolite.rc
+#   git_config_keys: set the GIT_CONFIG_KEYS variable for gitolite.rc
+#   log_extra: set the LOG_EXTRA variable for gitolite.rc
+#   roles: set the ROLES array for gitolite.rc
+#   pre_create: set the PRE_CREATE array for gitolite.rc
+#   post_create: set the POST_CREATE array for gitolite.rc
+#   post_compile: set the POST_COMPILE array for gitolite.rc
 #
 # Actions:
 #
@@ -43,14 +51,22 @@
 # [Remember: No empty lines between comments and class definition]
 class gitolite (
   $keycontent,
-  $password = 'undef',
-  $user = "gitolite",
-  $homedir = "/var/gitolite",
-  $source = "http://github.com/sitaramc/gitolite.git",
-  $version = "v3.1",
-  $packages = true,
-  $nonrootinstallmethod = false
-) {
+  $password        = $gitolite::params::password,
+  $user            = $gitolite::params::user,
+  $homedir         = $gitolite::params::homedir,
+  $source          = $gitolite::params::source,
+  $version         = $gitolite::params::version,
+  $packages        = $gitolite::params::packages,
+  $nonrootinstallmethod = $gitolite::params::nonrootinstallmethod,
+  $rcfile          = $gitolite::params::rcfile,
+  $umask           = $gitolite::params::umask,
+  $git_config_keys = $gitolite::params::git_config_keys,
+  $log_extra       = $gitolite::params::log_extra,
+  $roles           = $gitolite::params::roles,
+  $pre_create      = $gitolite::params::pre_create,
+  $post_create     = $gitolite::params::post_create,
+  $post_compile    = $gitolite::params::post_compile,
+) inherits gitolite::params {
 
   $bashpkg = $operatingsystem ? {
     /(?i:redhat|centos|fedora)/ => "bash",
@@ -141,6 +157,12 @@ class gitolite (
     content => $gitolite::keycontent,
     mode    => '0640',
     require => User[$gitolite::user],
+  }
+  
+  if $rcfile {
+    class { "gitolite::rc":
+      require => Exec['gitolite_setup'],
+    }
   }
 
   exec {
