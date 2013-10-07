@@ -10,10 +10,10 @@
   "checksums": {
     "COPYING": "1cf1cfe4f449b7c40aa4873fed4c4a06",
     "Modulefile": "b62caea1e794cbcfa43d40b8742c2c72",
-    "README.markdown": "d65203230b8ea3ecd2cef6e026c6b443",
-    "manifests/init.pp": "1cd89d62694648d485539efea5881f4a",
-    "manifests/params.pp": "176855089f6aeaae6bd1fe9e98d5e327",
-    "manifests/rc.pp": "0a8293f3e885c5a6817c843023a7415b",
+    "README.markdown": "995eb62168e297dec7f37279adb06f9b",
+    "manifests/init.pp": "7f7adb39cbedd43f893f58da1c5282a8",
+    "manifests/params.pp": "05936ba552b848de8765fc9219eb8cae",
+    "manifests/rc.pp": "6c6cb982ad2fdefb4670d4003617e09a",
     "spec/spec.opts": "a600ded995d948e393fbe2320ba8e51c",
     "spec/spec_helper.rb": "ca19ec4f451ebc7fdb035b52eae6e909",
     "tests/init.pp": "f6be449f03a0477d142c30140994eb78"

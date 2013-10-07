@@ -161,7 +161,14 @@ class gitolite (
   
   if $rcfile {
     class { "gitolite::rc":
-      require => Exec['gitolite_setup'],
+      umask           => $umask,
+      git_config_keys => $git_config_keys,
+      log_extra       => $log_extra,
+      roles           => $roles,
+      pre_create      => $pre_create,
+      post_create     => $post_create,
+      post_compile    => $post_compile,
+      require         => Exec['gitolite_setup'],
     }
   }
 
