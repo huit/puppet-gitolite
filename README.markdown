@@ -33,6 +33,7 @@ This module automatically installs [gitolite](http://sitaramc.github.com/gitolit
 * `git` (must be v1.6.6 or later)
 * `perl` (must be 5.8 or later)
 * `ssh` (client)
+* Puppetlabs\vcsrepo
 
 ## Sample Usage:
 
