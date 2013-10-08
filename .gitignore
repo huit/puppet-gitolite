@@ -15,4 +15,5 @@ tmtags
 tags
 
 # ignore tarballs
+pkg/
 pkg/*.gz
