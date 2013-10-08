@@ -19,13 +19,37 @@ This module automatically installs [gitolite](http://sitaramc.github.com/gitolit
 * `packages`  
   boolean value that determines whether this module will define the necessary package resources  
   set this to `false` if you want to define them elsewhere in your manifests
+* `nonrootinstallmethod`
+  allows installing gitolite in non-root mode (default false)
+  Different gitolite installation modes are described at
+  http://sitaramc.github.com/gitolite/g2/install.html#install_installing_and_upgrading_gitolite_
+  *NOTE* when using non-root install method set homedir to /home/...
+* `keycontent`
+  the public key that should have access to gitolite-admin when first configured
+* `rcfile`
+  configure .gitolite.rc file in gitolite mgmt user homedir
+* `umask`
+  set the UMASK variable for gitolite.rc
+* `git_config_keys`
+  set the GIT_CONFIG_KEYS variable for gitolite.rc
+* `log_extra`
+  set the LOG_EXTRA variable for gitolite.rc
+* `roles`
+  set the ROLES array for gitolite.rc
+* `pre_create`
+  set the PRE_CREATE array for gitolite.rc
+* `post_create`
+  set the POST_CREATE array for gitolite.rc
+* `post_compile`
+  set the POST_COMPILE array for gitolite.rc
 
 ## Actions:
 
 * Installs packages to satisfy requirements
 * Creates source directory (`/usr/src/gitolite`) and checks out Gitolite repo
 * Creates gitolite management user (local system user) if necessary
-* Runs `gl-system-install` command if necessary
+* Runs gitolite/install
+* Runs gitolite <public key>
 
 ## Requires:
 
