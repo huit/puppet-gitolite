@@ -158,6 +158,18 @@ class gitolite (
     mode    => '0640',
     require => User[$gitolite::user],
   }
+
+  if $gitolite::nonrootinstallmethod {
+    file { "${gitolite::homedir}/bin":
+      ensure  => directory,
+      owner   => $gitolite::user,
+      group   => $gitolite::user,
+      content => $gitolite::keycontent,
+      mode    => '0750',
+      require => User[$gitolite::user],
+    }
+  }
+   
   
   if $rcfile {
     class { "gitolite::rc":
@@ -174,9 +186,12 @@ class gitolite (
 
   exec {
     "gitolite/install":
-      require     => Vcsrepo[$gitolite::srcdir],
+      require     => $gitolite::nonrootinstallmethod ? {
+        true  => [ Vcsrepo[$gitolite::srcdir], File["${gitolite::homedir}/bin"] ],
+        default => Vcsrepo[$gitolite::srcdir]
+      },
       command     => $gitolite::nonrootinstallmethod ? {
-        true => "${gitolite::srcdir}/install ${gitolite::homedir}/bin",
+        true => "${gitolite::srcdir}/install -to ${gitolite::homedir}/bin",
         default => "${gitolite::srcdir}/install -ln /usr/local/bin",
       },
       cwd         => $gitolite::srcdir,
