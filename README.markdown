@@ -4,6 +4,29 @@ This module automatically installs [gitolite](http://sitaramc.github.com/gitolit
 
 **NOTE**: you must generate the SSH public key for the management user yourself (either with your own Puppet manifest, or manually) and install it before gitolite will work properly.  See the [documentation](http://sitaramc.github.com/gitolite/root.html).
 
+## Actions:
+
+* Installs packages to satisfy requirements
+* Creates source directory (`/usr/src/gitolite`) and checks out Gitolite repo
+* Creates gitolite management user (local system user) if necessary
+* Runs gitolite/install
+* Runs gitolite <public key>
+
+## Requires:
+
+* POSIX-compliant `sh` (attempts to install bash)
+* `git` (must be v1.6.6 or later)
+* `perl` (must be 5.8 or later)
+* `ssh` (client)
+* Puppetlabs\vcsrepo
+
+## Sample Usage:
+
+    class {
+      "gitolite":
+        ;
+    }
+
 ## Parameters:
 
 * `user`  
@@ -42,26 +65,3 @@ This module automatically installs [gitolite](http://sitaramc.github.com/gitolit
   set the POST_CREATE array for gitolite.rc
 * `post_compile`
   set the POST_COMPILE array for gitolite.rc
-
-## Actions:
-
-* Installs packages to satisfy requirements
-* Creates source directory (`/usr/src/gitolite`) and checks out Gitolite repo
-* Creates gitolite management user (local system user) if necessary
-* Runs gitolite/install
-* Runs gitolite <public key>
-
-## Requires:
-
-* POSIX-compliant `sh` (attempts to install bash)
-* `git` (must be v1.6.6 or later)
-* `perl` (must be 5.8 or later)
-* `ssh` (client)
-* Puppetlabs\vcsrepo
-
-## Sample Usage:
-
-    class {
-      "gitolite":
-        ;
-    }
