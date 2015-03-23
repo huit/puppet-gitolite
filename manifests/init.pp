@@ -4,6 +4,7 @@
 #
 # Parameters:
 #
+#   manage_user: Create gitolite management user and group (default "true")
 #   user: name of gitolite management user (default "gitolite")
 #   password: HASHED (not plain-text) password of gitolite management user
 #   homedir: home directory of gitolite management user
@@ -51,6 +52,7 @@
 # [Remember: No empty lines between comments and class definition]
 class gitolite (
   $keycontent,
+  $manage_user     = $gitolite::params::manage_user,
   $password        = $gitolite::params::password,
   $user            = $gitolite::params::user,
   $homedir         = $gitolite::params::homedir,
@@ -112,7 +114,7 @@ class gitolite (
     }
   }
 
-  if $gitolite::password != 'undef'{
+  if $manage_user and $gitolite::password != 'undef'{
     group {
       $gitolite::user:
         ensure => "present";
