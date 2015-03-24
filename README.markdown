@@ -6,6 +6,9 @@ This module automatically installs [gitolite](http://sitaramc.github.com/gitolit
 
 ## Parameters:
 
+
+* `manage_user`
+  whether to manage gitolite user (default "true")
 * `user`  
   name of gitolite management user (default "gitolite")  
 * `password`  
