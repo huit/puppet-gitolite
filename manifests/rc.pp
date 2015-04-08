@@ -23,12 +23,13 @@ class gitolite::rc(
   $post_create     = $gitolite::params::post_create,
   $post_compile    = $gitolite::params::post_compile,
 ) inherits gitolite::params {
-  
+
   file { "${gitolite::homedir}/.gitolite.rc":
-    ensure  => file,
-    owner   => $gitolite::user,
-    group   => $gitolite::user,
-    content => template('gitolite/gitolite3.rc.erb'),
-    mode    => '644',
+    ensure   => file,
+    owner    => $gitolite::user,
+    group    => $gitolite::user,
+    content  => template('gitolite/gitolite3.rc.erb'),
+    mode     => '644',
   }
+
 }

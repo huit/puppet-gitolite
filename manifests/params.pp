@@ -1,6 +1,7 @@
 #default params for gitolite module and it's classes
 class gitolite::params {
   $password         = 'undef'
+  $manage_user      = true
   $user             = "gitolite"
   $homedir          = "/var/gitolite"
   $source           = "http://github.com/sitaramc/gitolite.git"
